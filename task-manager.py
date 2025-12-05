@@ -57,7 +57,7 @@ def new_name(id, new):
         with open(file, "r") as f:
             data = json.load(f)
     else:
-        print("Create a task.")
+        print("Create a task first.")
         return None
         
     data["tasks"][id]["description"] = new
