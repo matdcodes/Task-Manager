@@ -32,6 +32,10 @@ prog_parser.add_argument("val", type=int, help="id of task")
 done_parser = subparser.add_parser("mark-done", help="sets status of task to done")
 done_parser.add_argument("val", type=int, help="id of task")
 
+#List Parser
+list_parser = subparser.add_parser("list", help="lists tasks")
+list_parser.add_argument("filter", choices=["done", "in-progress", "todo"], nargs="?")
+
 #Arguments
 args = parser.parse_args()
 
@@ -142,6 +146,42 @@ def mk_done(val):
         json.dump(data, f, indent=4)
         print('Task successfully updated.')
 
+#Function for list parser
+def lis_task(filter):
+    file = "tasks.json"
+
+    #File Check
+    if os.path.isfile(file) and os.path.getsize(file) > 0:
+        with open(file, "r") as f:
+            data = json.load(f)
+    else:
+        print("Create a task first.")
+        return None
+    
+    if filter == "done":
+        done_data = []
+        for task in data["tasks"]:
+            if task["status"] == "done":
+                done_data.append(task)
+
+        print(json.dumps(done_data, indent=2))
+    elif filter == "in-progress":
+        prog_data = []
+        for task in data["tasks"]:
+            if task["status"] == "in-progress":
+                prog_data.append(task)
+        
+        print(json.dumps(prog_data, indent=2))
+    elif filter == "todo":
+        todo_data = []
+        for task in data["tasks"]:
+            if task["status"] == "todo":
+                todo_data.append(task)
+
+        print(json.dumps(todo_data, indent=2))
+    else:
+        print(json.dumps(data, indent=2))
+    
 #Command List
 if args.command == "add":
     new_task(args.name)
@@ -153,5 +193,7 @@ elif args.command == "mark-in-progress":
     in_prog(args.val)
 elif args.command == "mark-done":
     mk_done(args.val)
+elif args.command == "list":
+    lis_task(args.filter)
 else:
     print("Failed to execute.")
