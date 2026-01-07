@@ -20,6 +20,10 @@ upd_parser = subparser.add_parser("update", help="update task name")
 upd_parser.add_argument("new_id", type=int, help="specific task to be changed")
 upd_parser.add_argument("new", type=str, help="new name of task")
 
+#Delete Parser
+del_parser = subparser.add_parser("delete", help="delete a task")
+del_parser.add_argument("num", type=int, help="id of task")
+
 #Arguments
 args = parser.parse_args()
 
@@ -39,10 +43,10 @@ def new_task(name):
         "description": name,
         "status": "todo",
         "createdAt": neat,
-        "updatedAt": ""
+        "updatedAt": neat
     }
     data["tasks"].append(tasks)
-    
+
     #Load data into JSON File
     with open(file, "w") as f:
         json.dump(data, f, indent=4)
@@ -67,10 +71,30 @@ def new_name(id, new):
         json.dump(data, f, indent=4)
         print('Task successfully updated.')
 
+#Function for "delete" parser
+def del_task(num):
+    file = "tasks.json"
+
+    #File Check
+    if os.path.isfile(file) and os.path.getsize(file) > 0:
+        with open(file, "r") as f:
+            data = json.load(f)
+    else:
+        print("Create a task first.")
+        return None
+    
+    data["tasks"].pop(num)
+    
+    with open(file, "w") as f:
+        json.dump(data, f, indent=4)
+        print('Task successfully updated.')
+
 #Command List
 if args.command == "add":
     new_task(args.name)
 elif args.command == "update":
     new_name(args.new_id, args.new)
+elif args.command == "delete":
+    del_task(args.num)
 else:
     print("Failed to execute.")
