@@ -85,6 +85,13 @@ def del_task(num):
     
     data["tasks"].pop(num)
     
+    #Reassign id Values
+    new_val = 0
+    for i in range(len(data["tasks"])):
+        if data["tasks"][i]["id"] != new_val:
+            data["tasks"][i]["id"] = new_val + 1
+            new_val += 1
+
     with open(file, "w") as f:
         json.dump(data, f, indent=4)
         print('Task successfully updated.')
