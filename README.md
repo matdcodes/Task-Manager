@@ -21,7 +21,7 @@ python task-manager.py list
 
 python task-manager.py update 0 "clean room and study"
 
-python task0manager.py mark-in-progress 0
+python task-manager.py mark-in-progress 0
 
 python task-manager.py mark-done 0
 ```
